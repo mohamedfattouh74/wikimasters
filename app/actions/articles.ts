@@ -17,6 +17,7 @@ import {
 import { z } from "zod";
 import { summarizeArticle } from "@/ai/summarize";
 import { getSession } from "@/lib/data/auth";
+import slugify from "slugify";
 
 export type CreateArticleInput = Pick<
   NewArticle,
@@ -24,18 +25,17 @@ export type CreateArticleInput = Pick<
 >;
 
 export async function createArticleAction(data: CreateArticleInput) {
+  console.log("createArticleAction called:", data);
   try {
     const session = await getSession();
     const authorId = session.user?.id;
-    const validatedData = createArticleSchema.safeParse(data);
-
+    const validatedData = createArticleSchema.safeParse({...data, authorId, slug: slugify(data.title, { lower: true, strict: true })});
     if (!validatedData.success) {
       return {
         success: false as const,
         error: z.treeifyError(validatedData.error),
       };
     }
-
     console.log("✨ createArticle called:", data, authorId);
     const summary = await summarizeArticle(data.title || "", data.content || "");
     const result = await createArticle({ ...data, summary }, authorId);
@@ -46,7 +46,7 @@ export async function createArticleAction(data: CreateArticleInput) {
     return { success: true as const, message: "Article created" };
   } catch (error) {
     console.error("Error creating article:", error);
-    return { success: false as const, error: "Failed to create article." };
+    return { success: false as const, error: "Failed to create article.", message: error };
   }
 }
 
@@ -61,7 +61,6 @@ export async function updateArticleAction(id: string, data: UpdateArticle) {
         error: "You are not authorized to update this article.",
       };
     }
-
     const validatedData = updateArticleSchema.safeParse(data);
     if (!validatedData.success) {
       return {

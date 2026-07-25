@@ -92,15 +92,22 @@ export default function WikiEditor({
       };
 
       if (isEditing && articleId) {
-        await updateArticleAction(articleId, payload);
-        // Redirect to article page after successful update
-        router.push(`/wiki/${articleId}`);
-      } else {
-        const { success, message } = await createArticleAction(payload);
+        const { success, error } = await updateArticleAction(articleId, payload);
         if (success) {
-          alert(message);
+          alert("Article updated successfully");
+          router.push(`/wiki/${articleId}`);
         } else {
-          alert(message);
+          alert('Failed to update article');
+          console.log("error:", error);
+        }
+      } else {
+        const { success, error } = await createArticleAction(payload);
+        if (success) {
+          alert("Article created successfully");
+          router.push(`/`);
+        } else {
+          alert('Failed to create article');
+          console.log("error:", error);
         }
       }
     } catch (err) {
@@ -110,7 +117,6 @@ export default function WikiEditor({
       setIsSubmitting(false);
     }
   };
-
 
   const handleCancel = () => {
     const shouldLeave = window.confirm(
