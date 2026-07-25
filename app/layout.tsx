@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-;import { Geist, Geist_Mono, Inter } from "next/font/google";
+import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import NavBar from "@/components/nav-bar";
-import { auth } from '@/lib/auth/server';
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -26,10 +25,7 @@ export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {  
-
-  const { data: session } = await auth.getSession();
-  
+}>) {    
   return (
     <html
       lang="en"
@@ -43,7 +39,7 @@ export default async function RootLayout({
       )}
     >
       <body className="min-h-full flex flex-col">
-        <NavBar session={session ?? null} />
+        <NavBar />
         {children}
       </body>
     </html>

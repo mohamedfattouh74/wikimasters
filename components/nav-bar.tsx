@@ -1,17 +1,11 @@
 import Link from 'next/link';
 import { SignOutButton } from '@/components/auth/sign-out-button';
 import { Button } from '@/components/ui/button';
+import { auth } from '@/lib/auth/server';
 
-type NavBarProps = {
-  session: {
-    user?: {
-      name?: string | null;
-      email?: string | null;
-    } | null;
-  } | null;
-};
 
-export default function NavBar({ session }: NavBarProps) {
+export default async function NavBar() {
+  const { data: session } = await auth.getSession();
   return (
     <nav className="w-full border-b bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 sticky top-0 z-50">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">

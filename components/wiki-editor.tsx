@@ -9,6 +9,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createArticleAction, updateArticleAction } from "@/app/actions/articles";
+import { uploadFile } from "@/app/actions/upload";
+import { useRouter } from "next/navigation";
+
 
 interface WikiEditorProps {
   initialTitle?: string;
@@ -33,6 +36,8 @@ export default function WikiEditor({
   const [files, setFiles] = useState<File[]>([]);
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
+
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
@@ -64,38 +69,48 @@ export default function WikiEditor({
   const handleSubmit = async (event: React.SubmitEvent) => {
     event.preventDefault();
 
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
 
     setIsSubmitting(true);
 
-    const payload = {
-      title: title.trim(),
-      content: content.trim(),
-    };
-
     try {
-      const result =
-        isEditing && articleId
-          ? await updateArticleAction(articleId, payload)
-          : await createArticleAction(payload);
+      let imageUrl: string | undefined;
 
-      if (!result.success) {
-        alert(result.error);
-        return;
+      // If there's at least one file, upload the first one via server action
+      if (files.length > 0) {
+        const fd = new FormData();
+        fd.append("files", files[0]);
+        // uploadFile is a server action imported below
+        const uploaded = await uploadFile(fd);
+        imageUrl = uploaded?.url;
       }
-    } catch (error) {
-      console.error("Failed to save article:", error);
-      alert(
-        error instanceof Error
-          ? error.message
-          : "Failed to save article. Please try again.",
-      );
+
+      const payload = {
+        title: title.trim(),
+        content: content.trim(),
+        imageUrl
+      };
+
+      if (isEditing && articleId) {
+        await updateArticleAction(articleId, payload);
+        // Redirect to article page after successful update
+        router.push(`/wiki/${articleId}`);
+      } else {
+        const { success, message } = await createArticleAction(payload);
+        if (success) {
+          alert(message);
+        } else {
+          alert(message);
+        }
+      }
+    } catch (err) {
+      console.error("Error submitting article:", err);
+      alert("Failed to submit article");
     } finally {
       setIsSubmitting(false);
     }
   };
+
 
   const handleCancel = () => {
     const shouldLeave = window.confirm(

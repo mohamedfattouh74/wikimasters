@@ -1,4 +1,6 @@
-import { Calendar, ChevronRight, Edit, Home, Trash, User } from "lucide-react";
+"use client";
+
+import { Calendar, ChevronRight, Edit, Eye, Home, Trash, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
@@ -6,6 +8,8 @@ import { deleteArticleForm } from "@/app/actions/articles";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { incrementPageview } from "@/app/actions/pageviews";
+import { useEffect , useState} from "react";
 
 interface ViewerArticle {
   title: string;
@@ -47,6 +51,17 @@ export default function WikiArticleViewer({
   article,
   canEdit = false,
 }: WikiArticleViewerProps) {
+  const [pageviews, setPageviews] = useState<number | null>(null);
+
+  useEffect(() => {
+    async function fetchPageviews() {
+      const views = await incrementPageview(article.id);
+      setPageviews(views);
+    }
+    fetchPageviews();
+  }, [article.id]);
+
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
@@ -78,6 +93,10 @@ export default function WikiArticleViewer({
             </div>
             <div className="flex items-center">
               <Badge variant="secondary">Article</Badge>
+              <div className="ml-3 flex items-center text-sm text-muted-foreground">
+                <Eye className="h-4 w-4 mr-1" />
+                {pageviews ? `${pageviews} views` : "-"}
+              </div>
             </div>
           </div>
         </div>
@@ -106,6 +125,7 @@ export default function WikiArticleViewer({
                   fill
                   className="object-cover"
                   priority
+                  sizes="100vw"
                 />
               </div>
             </div>
