@@ -8,7 +8,7 @@ import {
 } from "@/app/actions/comments";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
+import { cn, showSuccessMessage, showErrorMessage } from "@/lib/utils";
 
 interface CreateCommentFormProps {
   articleId: number;
@@ -26,6 +26,9 @@ export default function CreateCommentForm({
   useEffect(() => {
     if (state?.success) {
       formRef.current?.reset();
+      showSuccessMessage("Comment posted successfully");
+    } else if (state?.error) {
+      showErrorMessage(state.error);
     }
   }, [state]);
 

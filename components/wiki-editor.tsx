@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { createArticleAction, updateArticleAction } from "@/app/actions/articles";
 import { uploadFile } from "@/app/actions/upload";
 import { useRouter } from "next/navigation";
+import { showSuccessMessage, showErrorMessage } from "@/lib/utils";
 
 
 interface WikiEditorProps {
@@ -94,25 +95,25 @@ export default function WikiEditor({
       if (isEditing && articleId) {
         const { success, error } = await updateArticleAction(articleId, payload);
         if (success) {
-          alert("Article updated successfully");
+          showSuccessMessage("Article updated successfully");
           router.push(`/wiki/${articleId}`);
         } else {
-          alert('Failed to update article');
+          showErrorMessage('Failed to update article');
           console.log("error:", error);
         }
       } else {
         const { success, error } = await createArticleAction(payload);
         if (success) {
-          alert("Article created successfully");
+          showSuccessMessage("Article created successfully");
           router.push(`/`);
         } else {
-          alert('Failed to create article');
+          showErrorMessage('Failed to create article');
           console.log("error:", error);
         }
       }
     } catch (err) {
       console.error("Error submitting article:", err);
-      alert("Failed to submit article");
+      showErrorMessage("Failed to submit article");
     } finally {
       setIsSubmitting(false);
     }
