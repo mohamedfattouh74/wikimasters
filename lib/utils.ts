@@ -1,5 +1,16 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import {showToast , ToastOptions} from 'nextjs-toast-notify';
+
+
+const toastOptions: ToastOptions = {
+  duration: 4000,
+  progress: true,
+  position: 'top-right',
+  transition: "fadeIn",
+  icon: '',
+  sound: false,
+};
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -32,4 +43,12 @@ export function formatDate(dateString: string) {
     hour: "2-digit",
     minute: "2-digit",
   });
+}
+
+export function showSuccessMessage(message: string) {
+  showToast.success(message, toastOptions);
+}
+
+export function showErrorMessage(message: string) {
+  showToast.error(message, toastOptions);
 }
