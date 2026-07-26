@@ -8,9 +8,13 @@ const nextConfig: NextConfig = {
   },
   images: {
     remotePatterns: [
-      new URL(`${process.env.BLOB_BASE_URL}/**`)
-    ]
-  }
+      {
+        protocol: "https",
+        hostname: "feb4gbrezlm49wjx.public.blob.vercel-storage.com",
+        pathname: "/**",
+      },
+    ],
+  },
 };
 
 export default nextConfig;
