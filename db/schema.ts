@@ -1,5 +1,6 @@
 import {
   boolean,
+  integer,
   pgSchema,
   pgTable,
   serial,
@@ -51,18 +52,38 @@ export const articles = pgTable("articles", {
   authorId: uuid("author_id")
     .notNull()
     .references(() => userInNeonAuth.id),
-  createdAt: timestamp("created_at", { mode: "string" }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { mode: "string" }).defaultNow().notNull(),
+  createdAt: timestamp("created_at", { mode: "string" , withTimezone: true}).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { mode: "string" , withTimezone: true}).defaultNow().notNull(),
   summary: text("summary"),
 });
 
-const schema = { articles, userInNeonAuth };
+
+export const comments = pgTable("comments", {
+  id: serial("id").primaryKey(),
+  content: text("content").notNull(),
+  articleId: integer("article_id")
+    .notNull()
+    .references(() => articles.id),
+  authorId: uuid("author_id")
+    .notNull()
+    .references(() => userInNeonAuth.id),
+  createdAt: timestamp("created_at", { mode: "string" , withTimezone: true}).defaultNow().notNull(),
+})
+
+
+const schema = { articles, userInNeonAuth, comments };
 export default schema;
 
 export const createArticleSchema = createInsertSchema(articles);
 export const updateArticleSchema = createUpdateSchema(articles);
 export const selectArticleSchema = createSelectSchema(articles);
+export const createCommentSchema = createInsertSchema(comments);
+export const updateCommentSchema = createUpdateSchema(comments);
+export const selectCommentSchema = createSelectSchema(comments);
 
 export type Article = z.infer<typeof selectArticleSchema>;
 export type NewArticle = z.infer<typeof createArticleSchema>;
 export type UpdateArticle = z.infer<typeof updateArticleSchema>;
+export type Comment = z.infer<typeof selectCommentSchema>;
+export type NewComment = z.infer<typeof createCommentSchema>;
+export type UpdateComment = z.infer<typeof updateCommentSchema>;

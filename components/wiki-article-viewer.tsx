@@ -24,6 +24,7 @@ interface WikiArticleViewerProps {
   article: ViewerArticle;
   canEdit?: boolean;
   pageviews?: number | null;
+  children?: React.ReactNode;
 }
 
 function formatDate(dateString: string) {
@@ -50,6 +51,7 @@ function DeleteArticleButton({ articleId }: { articleId: number }) {
 export default function WikiArticleViewer({
   article,
   canEdit = false,
+  children,
 }: WikiArticleViewerProps) {
   const [pageviews, setPageviews] = useState<number | null>(null);
 
@@ -217,6 +219,8 @@ export default function WikiArticleViewer({
           </div>
         </CardContent>
       </Card>
+
+      {children}
 
       <div className="mt-8 flex justify-between items-center">
         <Link href="/">
