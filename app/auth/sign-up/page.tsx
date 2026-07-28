@@ -7,6 +7,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Sign up",
+  description: "Sign up to Wikimasters",
+}
 
 export default function SignUpPage() {
   return (

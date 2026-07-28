@@ -2,11 +2,17 @@ import Comments from "@/components/comments";
 import WikiArticleViewer from "@/components/wiki-article-viewer";
 import { getArticleById } from "@/lib/data/articles";
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
 
 interface ViewArticlePageProps {
   params: Promise<{
     id: string;
   }>;
+}
+
+export const metadata: Metadata = {
+  title: "View Article",
+  description: "View an article",
 }
 
 export default async function ViewArticlePage({
