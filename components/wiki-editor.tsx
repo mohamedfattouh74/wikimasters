@@ -206,7 +206,7 @@ export default function WikiEditor({
                 <div className="space-y-2">
                   <Label
                     htmlFor="file-upload"
-                    className="cursor-pointer text-sm font-medium"
+                    className="cursor-pointer text-sm font-medium mx-auto text-center w-40"
                   >
                     Click to upload files
                   </Label>
