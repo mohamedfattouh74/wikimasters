@@ -3,6 +3,12 @@ import { getArticles } from "@/lib/data/articles";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Wikimasters",
+  description: "Wikimasters is a platform for creating and sharing knowledge",
+}
 
 export default async function Home() {
   const articles = await getArticles();

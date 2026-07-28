@@ -1,11 +1,17 @@
 import WikiEditor from "@/components/wiki-editor";
 import { getArticleById } from "@/lib/data/articles";
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
 
 interface EditArticlePageProps {
   params: Promise<{
     id: string;
   }>;
+}
+
+export const metadata: Metadata = {
+  title: "Edit Article",
+  description: "Edit an article",
 }
 
 export default async function EditArticlePage({
