@@ -1,14 +1,38 @@
-import { SignUpForm } from '@/components/auth/sign-up-form';
+import Link from "next/link";
+import { SignUpForm } from "@/components/auth/sign-up-form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export default function SignUpPage() {
   return (
-    <div className="flex flex-col gap-5 min-h-screen items-center justify-center bg-gray-900">
-      <div className="w-sm">
-        <h1 className="mt-10 text-center text-2xl/9 font-bold text-white">
-          Create new account
-        </h1>
-      </div>
-      <SignUpForm />
+    <div className="flex flex-1 items-center justify-center px-4 py-12">
+      <Card className="w-full max-w-sm">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl font-bold text-foreground">
+            Create new account
+          </CardTitle>
+          <CardDescription>
+            Join Wikimasters to start writing
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <SignUpForm />
+          <p className="mt-6 text-center text-sm text-muted-foreground">
+            Already have an account?{" "}
+            <Link
+              href="/auth/sign-in"
+              className="font-medium text-foreground underline-offset-4 hover:underline"
+            >
+              Sign in
+            </Link>
+          </p>
+        </CardContent>
+      </Card>
     </div>
   );
 }
